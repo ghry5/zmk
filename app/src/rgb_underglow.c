@@ -475,21 +475,21 @@ static void zmk_rgb_underglow_effect_battery() {
     
     struct led_rgb green = {
         .r = 0,
-        .g = 255,
+        .g = CONFIG_ZMK_RGB_UNDERGLOW_BRT_SCALE,
         .b = 0,
     };
     struct led_rgb yellow = {
-        .r = 255,
-        .g = 255,
+        .r = CONFIG_ZMK_RGB_UNDERGLOW_BRT_SCALE,
+        .g = CONFIG_ZMK_RGB_UNDERGLOW_BRT_SCALE,
         .b = 0,
     };
-    struct led_rgb orange = {
-        .r = 255,
-        .g = 144,
-        .b = 0,
-    };
+    //struct led_rgb orange = {
+    //    .r = CONFIG_ZMK_RGB_UNDERGLOW_BRT_SCALE,
+    //    .g = 144,
+    //    .b = 0,
+    //};
     struct led_rgb red = {
-        .r = 255,
+        .r = CONFIG_ZMK_RGB_UNDERGLOW_BRT_SCALE,
         .g = 0,
         .b = 0,
     };
@@ -498,15 +498,15 @@ static void zmk_rgb_underglow_effect_battery() {
         .g = 0,
         .b = 0,
     };
-    struct led_rgb colors[5] = {green, yellow, orange, red, black};
+    struct led_rgb colors[4] = {green, yellow, red, black};
 
-    int tick_size = 100/(4*STRIP_NUM_PIXELS);
+    int tick_size = 100/(3*STRIP_NUM_PIXELS);
     int zone_size = tick_size*STRIP_NUM_PIXELS;
     int offset = 0;
 
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
 
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < 4; j++) {
             if (soc >= (100 + offset - zone_size * (j + 1))) {
                 pixels[i] = colors[j];
                 break;
