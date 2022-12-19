@@ -472,26 +472,40 @@ static void zmk_rgb_underglow_effect_test() {
 
 static void zmk_rgb_underglow_effect_battery() {
     uint8_t soc = zmk_battery_state_of_charge();
-    struct led_rgb rgb;
-    if (soc > 80) {
-        rgb.r = 0;
-        rgb.g = 255;
-        rgb.b = 0;
-    } else if (soc > 50 && soc < 80) {
-        rgb.r = 255;
-        rgb.g = 255;
-        rgb.b = 0;
-    } else if (soc > 20 && soc < 51) {
-        rgb.r = 255;
-        rgb.g = 140;
-        rgb.b = 0;
-    } else {
-        rgb.r = 255;
-        rgb.g = 0;
-        rgb.b = 0;
-    }
+    
+    struct led_rgb green = {
+        .r = 0,
+        .g = 255,
+        .b = 0,
+    };
+    struct led_rgb yellow = {
+        .r = 255,
+        .g = 255,
+        .b = 0,
+    };
+    struct led_rgb orange = {
+        .r = 255,
+        .g = 144,
+        .b = 0,
+    };
+    struct led_rgb red = {
+        .r = 255,
+        .g = 0,
+        .b = 0,
+    };
+    struct led_rgb black = {
+        .r = 0,
+        .g = 0,
+        .b = 0,
+    };
+    struct led_rgb colors[5] = {black, red, orange, yellow, green};
+
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-        pixels[i] = rgb;
+        // calculate color index as ceil(soc*4/100+i/(STRIP_NUM_PIXELS+1))
+        int col_idx = ceil((float)soc * 4 / 100 + (float)i / (STRIP_NUM_PIXELS + 1));
+        if (col_idx > 4) col_idx = 4;
+        if (col_idx < 0) col_idx = 0;
+        pixels[i] = colors[col_idx];
     }
 }
 
