@@ -498,14 +498,21 @@ static void zmk_rgb_underglow_effect_battery() {
         .g = 0,
         .b = 0,
     };
-    struct led_rgb colors[5] = {black, red, orange, yellow, green};
+    struct led_rgb colors[5] = {green, yellow, orange, red, black};
+
+    int tick_size = 100/(4*STRIP_NUM_PIXELS);
+    int zone_size = tick_size*STRIP_NUM_PIXELS;
+    int offset = 0;
 
     for (int i = 0; i < STRIP_NUM_PIXELS; i++) {
-        // calculate color index as ceil(soc*4/100+i/(STRIP_NUM_PIXELS+1))
-        int col_idx = ceil((float)soc * 4 / 100 + (float)i / (STRIP_NUM_PIXELS + 1));
-        if (col_idx > 4) col_idx = 4;
-        if (col_idx < 0) col_idx = 0;
-        pixels[i] = colors[col_idx];
+
+        for (int j = 0; j < 5; j++) {
+            if (soc >= (100 + offset - zone_size * (j + 1))) {
+                pixels[i] = colors[j];
+                break;
+            }
+        }
+        offset += tick_size;
     }
 }
 
